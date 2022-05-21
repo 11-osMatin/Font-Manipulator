@@ -1,10 +1,14 @@
+left_wrist_x = 0;
+right_wrist_x = 0;
+difference = 0;
+
 function setup() {
     video = createCapture(VIDEO);
     video.size(400, 400);
     video.position(10, 50);
 
-    canvas = createCanvas(400, 400);
-    canvas.position(430, 130);
+    canvas = createCanvas(800, 400);
+    canvas.position(130, 130);
 
     poseNet = ml5.poseNet(video, modelDone);
     poseNet.on('pose', gotPoses);
@@ -16,6 +20,10 @@ function modelDone() {
 
 function draw() {
     background("#5196e3");
+    document.getElementById("font-size").innerHTML = "Font Size of Text = " + difference + "px";
+    fill("#00ff0a");
+    textSize(difference);
+    text('Matin', 50, 400);
 }
 
 function gotPoses(results, error) {
@@ -24,6 +32,11 @@ function gotPoses(results, error) {
     }
     if (results.length > 0) {
         console.log(results);
+
+        right_wrist_x = results[0].pose.rightWrist.x;
+        left_wrist_x = results[0].pose.leftWrist.x;
+
+        difference = floor(left_wrist_x - right_wrist_x);
 
         console.log("rightwrist_x = " + results[0].pose.rightWrist.x + "rightwrist_y = " + results[0].pose.rightWrist.y);
         console.log("leftwrist_x = " + results[0].pose.leftWrist.x + "leftwrist_y = " + results[0].pose.leftWrist.y);
